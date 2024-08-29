@@ -47,7 +47,7 @@ const App = () => {
         />
       </div>
 
-      <Log />
+      <Log turns={gameTurns}/>
     </main>
   );
 };
