@@ -24,6 +24,7 @@ const Player = ({ initialName, symbol, isActive }) => {
       />
     );
   }
+  
   return (
     <li className={isActive ? 'active' : undefined}>
       <span>

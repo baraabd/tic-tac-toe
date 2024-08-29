@@ -3,25 +3,34 @@ import Log from "./components/log";
 import { useState } from "react";
 import GameBoard from "./components/GameBoard";
 
+const deriveActivePlayer = (gameTurns) => {
+  let currentPlayer = "X";
+
+  if (gameTurns.length > 0 && gameTurns[0].player === "X") {
+    currentPlayer = "O";
+  }
+  return currentPlayer;
+};
+
 const App = () => {
-  const [activePlayer, setActivePrayer] = useState("X");
+  //const [activePlayer, setActivePrayer] = useState("X");
   const [gameTurns, setGameTurns] = useState([]);
 
-  const handleSelectedSquare = (rowIndex, colIndex) => {
-    setActivePrayer((curActivePlayer) => (curActivePlayer === "X" ? "O" : "X"));
-    setGameTurns((prevTurns) => {
-      let currentPlayer = 'X';
+  const activePlayer = deriveActivePlayer(gameTurns);
 
-      if (prevTurns.length > 0 && prevTurns[0].player === 'X') {
-        currentPlayer = 'O';
-      }
+  const handleSelectedSquare = (rowIndex, colIndex) => {
+    //setActivePrayer((curActivePlayer) => (curActivePlayer === "X" ? "O" : "X"));
+    setGameTurns((prevTurns) => {
+      const currentPlayer = deriveActivePlayer(prevTurns);
 
       const updatedTurns = [
         { square: { row: rowIndex, col: colIndex }, player: activePlayer },
         ...prevTurns,
       ];
+      
+      console.log(gameTurns);
 
-      return updatedTurns; 
+      return updatedTurns;
     });
   };
 
@@ -41,13 +50,10 @@ const App = () => {
           />
         </ol>
 
-        <GameBoard
-          onSelectSquare={handleSelectedSquare}
-          turns={gameTurns}
-        />
+        <GameBoard onSelectSquare={handleSelectedSquare} turns={gameTurns} />
       </div>
 
-      <Log turns={gameTurns}/>
+      <Log turns={gameTurns} />
     </main>
   );
 };
