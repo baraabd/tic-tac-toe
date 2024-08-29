@@ -4,6 +4,12 @@ import { useState } from "react";
 import GameBoard from "./components/GameBoard";
 import { WINNING_COMBINATIONS } from "./winning-combination";
 
+const initalGameBoard = [
+  [null, null, null],
+  [null, null, null],
+  [null, null, null],
+];
+
 const deriveActivePlayer = (gameTurns) => {
   let currentPlayer = "X";
 
@@ -16,8 +22,33 @@ const deriveActivePlayer = (gameTurns) => {
 const App = () => {
   //const [activePlayer, setActivePrayer] = useState("X");
   const [gameTurns, setGameTurns] = useState([]);
-
+  
   const activePlayer = deriveActivePlayer(gameTurns);
+
+  let gameBoard = initalGameBoard;
+
+  console.log(gameTurns);
+
+  for (const turn of gameTurns) {
+    const { square, player } = turn;
+    const { row, col } = square;
+
+    gameBoard[row][col] = player;
+  }
+
+  console.log(gameBoard);
+  let winner;
+  for (const combination of WINNING_COMBINATIONS) {
+    const firstSquareSymbol = gameBoard[combination[0].row][combination[0].column];
+    const secondSquareSymbol = gameBoard[combination[1].row][combination[1].column];
+    const thirdSquareSymbol = gameBoard[combination[2].row][combination[2].column];
+
+    if (firstSquareSymbol && firstSquareSymbol === secondSquareSymbol && firstSquareSymbol === thirdSquareSymbol) {
+      winner = firstSquareSymbol;
+      
+    }
+
+  }
 
   const handleSelectedSquare = (rowIndex, colIndex) => {
     //setActivePrayer((curActivePlayer) => (curActivePlayer === "X" ? "O" : "X"));
@@ -50,8 +81,8 @@ const App = () => {
             isActive={activePlayer === "O"}
           />
         </ol>
-
-        <GameBoard onSelectSquare={handleSelectedSquare} turns={gameTurns} />
+        {winner && <p>You won, {winner}!</p>}
+        <GameBoard onSelectSquare={handleSelectedSquare} board={gameBoard} />
       </div>
 
       <Log turns={gameTurns} />
